@@ -16,29 +16,25 @@
 #-----------------
 # And so on
 
-from sqlalchemy import create_engine 
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker 
 from models import Congressperson, Party
 import pandas as pd
+from models import Base
 
 
-engine = create_engine('sqlite://')
+engine = create_engine('sqlite:///test.db', echo=True)
 members = pd.read_csv('./data/HSall_members.csv')
+parties = pd.read_csv('./data/HSall_parties.csv')
+Base.metadata.create_all(engine)
 
-# Create table for Congressperson
-def create_congressperson_table(congresspersons):
-    """
-    Returns a list of Congressperson objects from a Series as input 
-    """
-    cons = []
-    for i, c in congresspersons:
-        cons.append(Congressperson(id=i, bioname=c))
-    return cons
+# session stuff
+Session = sessionmaker(bind=engine)
+session = Session()
 
-# Create table for Party
-def create_party_table(parties):
-    """
-    Returns a list of Party objects from a Dataframe as input
-    """
-    parties = []
-
-
+# add george washington
+george = members.loc[0]
+c = Congressperson(icpsr=int(george.icpsr), bioname=george.bioname)
+session.add(c)
+session.commit()
+session.close()
