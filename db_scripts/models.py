@@ -12,6 +12,8 @@ congressperson_party = Table('congressperson_party', Base.metadata,
     Column('congress_num', Integer, ForeignKey('congress.congress_num')),
     Column('chamber', String)
 )
+
+
 class Congressperson(Base):
     __tablename__ = 'congressperson'
     icpsr = Column(Integer, primary_key=True) # Note: this is their ICPSR code or whatever
@@ -34,3 +36,13 @@ class Congress(Base):
     __tablename__ = 'congress'
     congress_num = Column(Integer, primary_key=True)
 
+
+class Chamber(Base):
+    __tablename__ = 'chamber'
+    chamber_name = Column(String, primary_key=True)
+
+class State(Base):
+    # yet another reference table!
+    __tablename__ = 'states'
+    state_icpsr = Column(Integer, primary_key=True)
+    state_abbrev = Column(String)

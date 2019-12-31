@@ -6,9 +6,8 @@
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker 
-from models import Congressperson, Party
+from models import * 
 import pandas as pd
-from models import Base
 
 
 engine = create_engine('sqlite:///test.db', echo=True)
@@ -25,6 +24,12 @@ session = Session()
 # c = Congressperson(icpsr=int(george.icpsr), bioname=george.bioname)
 # session.add(c)
 
+# create chamber reference table
+chambers = members['chamber'].unique()
+for i in range(len(chambers)):
+    cham = Chamber(chamber_name=chambers[i])
+    session.add(cham)
+
 # create first congress
 first_congress = members.loc[members['congress'] == 1]
 for i in range(len(first_congress)):
@@ -39,12 +44,16 @@ for i in range(len(unique_parties)):
 
 # now we want to go through the congress and assign parties
 cons = session.query(Congressperson).all()
-ps = session.query(Party).all()
+ps = session.query(Party).all() # pronounced "peas" or perhaps "piss" but never "pee ess"
 
 for p in ps:
     for con in cons:
-        # if con in p:  Need ta figure out how best to do this!
-        #   p.append(con)
+        # get party codes for each congressperson (can be >1)
+        cons_parties = members[members['icpsr'] == con.icpsr].party_code.unique()
+        if p.party_code in cons_parties:
+            p.congresspersons.append(con)
+            session.add(p)
+
 
 session.commit()
 session.close()
