@@ -13,12 +13,19 @@ congressperson_party = Table('congressperson_party', Base.metadata,
     Column('chamber', String)
 )
 
+congressperson_state = Table('congressperson_state', Base.metadata,
+    Column('state_icpsr', Integer, ForeignKey('state.state_icpsr')),
+    Column('congressperson_icpsr', Integer, ForeignKey('congressperson.icpsr')),
+    Column('congress_num', Integer, ForeignKey('congress.congress_num'))
+)
+# todo: probably a good idea to turn congressperson_state into a whole associative entity
 
 class Congressperson(Base):
     __tablename__ = 'congressperson'
     icpsr = Column(Integer, primary_key=True) # Note: this is their ICPSR code or whatever
     bioname = Column(String)
     parties = relationship('Party', secondary=congressperson_party, back_populates='congresspersons')
+    states = relationship('State', secondary=congressperson_state, back_populates='congresspersons')
     def __repr__(self):
         return "<Congressperson(bioname='%s')>" % (self.bioname)
 
@@ -41,8 +48,11 @@ class Chamber(Base):
     __tablename__ = 'chamber'
     chamber_name = Column(String, primary_key=True)
 
+
 class State(Base):
     # yet another reference table!
-    __tablename__ = 'states'
+    __tablename__ = 'state'
     state_icpsr = Column(Integer, primary_key=True)
     state_abbrev = Column(String)
+    congresspersons = relationship('Congressperson', secondary=congressperson_state, back_populates='states')
+

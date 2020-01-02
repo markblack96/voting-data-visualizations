@@ -24,6 +24,12 @@ session = Session()
 # c = Congressperson(icpsr=int(george.icpsr), bioname=george.bioname)
 # session.add(c)
 
+# create states reference table
+states = members[['state_abbrev', 'state_icpsr']].drop_duplicates()
+for i in range(len(states)):
+    state = State(state_icpsr=int(states.iloc[i].state_icpsr), state_abbrev=states.iloc[i].state_abbrev)
+    session.add(state)
+
 # create chamber reference table
 chambers = members['chamber'].unique()
 for i in range(len(chambers)):
@@ -53,6 +59,14 @@ for p in ps:
         if p.party_code in cons_parties:
             p.congresspersons.append(con)
             session.add(p)
+
+states = session.query(State).all()
+for state in states:
+    for con in cons:
+        cons_states = members[members['icpsr'] == con.icpsr].state_icpsr.unique()
+        if state.state_icpsr in cons_states:
+            state.congresspersons.append(con)
+            session.add(state)
 
 
 session.commit()
