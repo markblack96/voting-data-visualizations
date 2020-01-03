@@ -6,26 +6,35 @@ from sqlalchemy.ext.declarative import declarative_base
 
 Base = declarative_base()
 
-congressperson_party = Table('congressperson_party', Base.metadata,
+# todo: make the below into association objects
+"""congressperson_party = Table('congressperson_party', Base.metadata,
     Column('icpsr', Integer, ForeignKey('congressperson.icpsr')),
     Column('party_code', Integer, ForeignKey('party.party_code')),
     Column('congress_num', Integer, ForeignKey('congress.congress_num')),
     Column('chamber', String)
-)
+)"""
 
 congressperson_state = Table('congressperson_state', Base.metadata,
     Column('state_icpsr', Integer, ForeignKey('state.state_icpsr')),
     Column('congressperson_icpsr', Integer, ForeignKey('congressperson.icpsr')),
-    Column('congress_num', Integer, ForeignKey('congress.congress_num'))
 )
-# todo: probably a good idea to turn congressperson_state into a whole associative entity
+
+class CongresspersonParty(Base):
+    __tablename__ = 'congressperson_party'
+    icpsr = Column(Integer, ForeignKey('congressperson.icpsr'), primary_key=True)
+    party_code = Column(Integer, ForeignKey('party.party_code'), primary_key=True)
+    party = relationship('Party', back_populates='congresspersons')
+    congressperson = relationship('Congressperson', back_populates='parties')
+    congress_num = Column(Integer)
+    chamber = Column(String)
+
 
 class Congressperson(Base):
     __tablename__ = 'congressperson'
-    icpsr = Column(Integer, primary_key=True) # Note: this is their ICPSR code or whatever
+    icpsr = Column(Integer, primary_key=True) 
     bioname = Column(String)
-    parties = relationship('Party', secondary=congressperson_party, back_populates='congresspersons')
-    states = relationship('State', secondary=congressperson_state, back_populates='congresspersons')
+    parties = relationship('CongresspersonParty', back_populates='party')
+    states = relationship('State', back_populates='congresspersons')
     def __repr__(self):
         return "<Congressperson(bioname='%s')>" % (self.bioname)
 
@@ -34,7 +43,7 @@ class Party(Base):
     __tablename__ = 'party'
     party_code = Column(Integer, primary_key=True)
     party_name = Column(String)
-    congresspersons = relationship('Congressperson', secondary=congressperson_party, back_populates='parties')
+    congresspersons = relationship('CongresspersonParty', back_populates='congressperson')
     def __repr__(self):
         return "<Party(party_name='%s')>" % (self.party_name)
 
