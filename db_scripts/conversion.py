@@ -43,14 +43,6 @@ for i in range(len(unique_parties)):
     session.add(p)
 
 """
-One strategy might be to get each instance of a congressperson in a congress by their ICPSR e.g.
-icpsr_list = members.icpsr.unique()
-for icpsr in icpsr_list:
-    etc.
-
-Then it's straightforward to add requisite data for sql conversion
-"""
-
 icpsr_list = members.icpsr.unique()
 for i in range(len(icpsr_list)):
     # get basic data
@@ -62,12 +54,11 @@ for i in range(len(icpsr_list)):
     # go through each_congess_served and add relevant data for parties, congresses, and states for con
     for j in range(len(each_congress_served)):
         con_p = CongresspersonParty(
-                    icpsr=each_congress_served.iloc[i].icpsr,
-                    party_code=each_congress_served.iloc[i].party_code,
-                    congress_num=each_congress_served.iloc[i].congress,
-                    chamber=each_congress_served.iloc[i].chamber
-                )
-    
+                    icpsr=each_congress_served.iloc[j].icpsr,
+                    party_code=each_congress_served.iloc[j].party_code,
+                    congress_num=each_congress_served.iloc[j].congress,
+                    chamber=each_congress_served.iloc[j].chamber)
+"""    
 
 # create first congress
 first_congress = members.loc[members['congress'] == 1]
@@ -79,25 +70,6 @@ for i in range(len(first_congress)):
 cons = session.query(Congressperson).all()
 ps = session.query(Party).all() # pronounced "peas" or perhaps "piss" but never "pee ess"
 
-
-for p in ps:
-    for con in cons:
-        cons_parties = members[members['icpsr'] == con.icpsr].party_code.unique()
-        if p.party_code in cons_parties:
-            con_p = CongresspersonParty(
-                        icpsr=con.icpsr,
-                        party_code=p.party_code,
-                        congress_num=
-                    )
-
-for p in ps:
-    for con in cons:
-        # get party codes for each congressperson (can be >1)
-        cons_parties = members[members['icpsr'] == con.icpsr].party_code.unique()
-        if p.party_code in cons_parties:
-            p.congresspersons.append(con)
-            session.add(p)
-
 states = session.query(State).all()
 for state in states:
     for con in cons:
@@ -106,6 +78,19 @@ for state in states:
             state.congresspersons.append(con)
             session.add(state)
 
-
+"""
+# Populate CongresspersonParty
+icpsrs = first_congress.icpsr.unique()
+for icpsr in icpsrs:
+    con = session.query(Congressperson).filter_by(icpsr=int(icpsr)).first()
+    # find parties via icpsr
+    parties = first_congress[first_congress['icpsr'] == icpsr].party_code.unique()
+    if len(parties) > 0:
+        for p_code in parties:
+            cp = CongresspersonParty(icpsr=con.icpsr, party_code=p_code, congress_num=1)
+            p = session.query(Party).filter_by(party_code=p_code).first()
+            cp.party = p
+            con.parties.append(cp)
+"""
 session.commit()
 session.close()
