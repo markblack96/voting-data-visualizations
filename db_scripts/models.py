@@ -26,7 +26,7 @@ class CongresspersonParty(Base):
     party = relationship('Party', back_populates='congresspersons')
     congressperson = relationship('Congressperson', back_populates='parties')
     congress_num = Column(Integer) # todo: probably make this a primary key too, since icpsr+party_code will be insufficient when >1st congress added
-    # chamber = Column(String)
+    chamber = Column(String)
 
 
 class Congressperson(Base):

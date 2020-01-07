@@ -78,19 +78,22 @@ for state in states:
             state.congresspersons.append(con)
             session.add(state)
 
-"""
-# Populate CongresspersonParty
-icpsrs = first_congress.icpsr.unique()
-for icpsr in icpsrs:
-    con = session.query(Congressperson).filter_by(icpsr=int(icpsr)).first()
-    # find parties via icpsr
-    parties = first_congress[first_congress['icpsr'] == icpsr].party_code.unique()
-    if len(parties) > 0:
-        for p_code in parties:
-            cp = CongresspersonParty(icpsr=con.icpsr, party_code=p_code, congress_num=1)
-            p = session.query(Party).filter_by(party_code=p_code).first()
-            cp.party = p
-            con.parties.append(cp)
-"""
+
+# Below is working, however it won't work for any congress except the first one unless we can encapsulate it in an outer loop through each congress, the below code could be used in some way
+# members[(members['icpsr'] == con.icpsr)][['congress', 'chamber', 'party_code']]
+for con in cons:
+    con_parties = members[members['icpsr'] == con.icpsr].party_code.unique()
+    if len(con_parties) > 0:
+        for cp in con_parties:
+            p = session.query(Party).filter_by(party_code=int(cp)).first()
+            chamber = members[members['icpsr'] == ].chamber
+            c_p = CongresspersonParty(icpsr=con.icpsr, party_code=int(cp), congress_num=1, chamber=)
+            c_p.party = p
+            c_p.congressperson = con
+
+
+
+
+
 session.commit()
 session.close()
