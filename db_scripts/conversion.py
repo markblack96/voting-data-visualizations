@@ -81,7 +81,7 @@ for state in states:
 
 # Below is working, however it won't work for any congress except the first one unless we can encapsulate it in an outer loop through each congress, the below code could be used in some way
 # members[(members['icpsr'] == con.icpsr)][['congress', 'chamber', 'party_code']]
-for con in cons:
+"""for con in cons:
     con_parties = members[members['icpsr'] == con.icpsr].party_code.unique()
     if len(con_parties) > 0:
         for cp in con_parties:
@@ -90,7 +90,21 @@ for con in cons:
             c_p = CongresspersonParty(icpsr=con.icpsr, party_code=int(cp), congress_num=1, chamber=)
             c_p.party = p
             c_p.congressperson = con
+"""
 
+# Outer loop goes through congresspersons
+# Inner loops gets relevant data for CongresspersonParty and creates instances
+for con in cons:
+    data = members[members['icpsr'] == con.icpsr][['congress', 'chamber', 'party_code']]
+    for i in range(len(data.congress.unique())):
+        datum = data.iloc[i]
+        p = session.query(Party).filter_by(party_code=int(datum.party_code)).first()
+        c_p = CongresspersonParty(icpsr=con.icpsr, 
+                party_code=int(datum.party_code), 
+                congress_num=int(datum.congress),
+                chamber=datum.chamber)
+        c_p.party = p
+        c_p.congressperson = con
 
 
 
