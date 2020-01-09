@@ -1,0 +1,26 @@
+<!doctype html>
+<html>
+<head>
+    <title>VoteView Visualizations</title>
+</head>
+<body>
+    <script>
+    // Get the data 
+    p = new Promise(
+        function(resolve, reject) {
+            const xhr = new XMLHttpRequest();
+            xhr.open("GET", "http://127.0.0.1:5000/congress/1");
+            xhr.onload = () => resolve(xhr.responseText);
+            xhr.onerror = () => reject(xhr.statusText);
+            xhr.send()
+        }
+    );
+    var data;
+    p.then(
+        (value) => {
+            data = JSON.parse(value);
+        }
+    );
+    </script>
+</body>
+</html>

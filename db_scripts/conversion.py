@@ -60,17 +60,28 @@ for i in range(len(icpsr_list)):
                     chamber=each_congress_served.iloc[j].chamber)
 """    
 
-# create first congress
-first_congress = members.loc[members['congress'] == 1]
+# create first congress (legacy)
+"""
+first_congress = members.loc[members['congress'] == 1] 
 for i in range(len(first_congress)):
     con = Congressperson(icpsr=int(first_congress.loc[i].icpsr), bioname=first_congress.loc[i].bioname)
+    session.add(con)
+"""
+# populate all congresspersons
+con_data = members[['icpsr', 'bioname']].drop_duplicates('icpsr')
+for i in range(len(con_data)):
+    con = con_data.iloc[i]
+    con = Congressperson(
+                icpsr=int(con.icpsr),
+                bioname=con.bioname
+            )
     session.add(con)
 
 # now we want to go through the congress and assign parties
 cons = session.query(Congressperson).all()
 ps = session.query(Party).all() # pronounced "peas" or perhaps "piss" but never "pee ess"
 
-states = session.query(State).all()
+states = session.query(State).all() # this works but is excruciatingly slow b/c cons is huge
 for state in states:
     for con in cons:
         cons_states = members[members['icpsr'] == con.icpsr].state_icpsr.unique()
@@ -95,14 +106,15 @@ for state in states:
 # Outer loop goes through congresspersons
 # Inner loops gets relevant data for CongresspersonParty and creates instances
 for con in cons:
-    data = members[members['icpsr'] == con.icpsr][['congress', 'chamber', 'party_code']]
+    data = members[members['icpsr'] == con.icpsr][['congress', 'chamber', 'party_code', 'state_abbrev']]
     for i in range(len(data.congress.unique())):
         datum = data.iloc[i]
         p = session.query(Party).filter_by(party_code=int(datum.party_code)).first()
         c_p = CongresspersonParty(icpsr=con.icpsr, 
                 party_code=int(datum.party_code), 
                 congress_num=int(datum.congress),
-                chamber=datum.chamber)
+                chamber=datum.chamber,
+                state=datum.state_abbrev)
         c_p.party = p
         c_p.congressperson = con
 
