@@ -6,21 +6,28 @@
 <body>
     <script>
     // Get the data 
-    p = new Promise(
-        function(resolve, reject) {
-            const xhr = new XMLHttpRequest();
-            xhr.open("GET", "http://127.0.0.1:5000/congress/1");
-            xhr.onload = () => resolve(xhr.responseText);
-            xhr.onerror = () => reject(xhr.statusText);
-            xhr.send()
-        }
-    );
-    var data;
-    p.then(
-        (value) => {
-            data = JSON.parse(value);
-        }
-    );
+    var getCongressByNumber = function(n) {
+        p = new Promise(
+            function(resolve, reject) {
+                const xhr = new XMLHttpRequest();
+                xhr.open("GET", "http://127.0.0.1:5000/congress/1");
+                xhr.onload = () => resolve(xhr.responseText);
+                xhr.onerror = () => reject(xhr.statusText);
+                xhr.send()
+            }
+        );
+        var data;
+        p.then(
+            (value) => {
+                data = JSON.parse(value);
+            }
+        );
+    }
     </script>
+    <div id="app">
+    <!-- This will be especially useful when I put Vue in here -->
+        <div id="dot-visualization">
+        </div>
+    </div>
 </body>
 </html>
