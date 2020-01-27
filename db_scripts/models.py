@@ -25,13 +25,14 @@ class CongresspersonParty(Base):
     party_code = Column(Integer, ForeignKey('party.party_code'), primary_key=True)
     party = relationship('Party', back_populates='congresspersons')
     congressperson = relationship('Congressperson', back_populates='parties')
-    congress_num = Column(Integer, primary_key=True) # todo: probably make this a primary key too, since icpsr+party_code will be insufficient when >1st congress added
+    congress_num = Column(Integer, primary_key=True)
     chamber = Column(String, primary_key=True)
     state = Column(String)
+    district = Column(Integer)
 
 class Congressperson(Base):
     __tablename__ = 'congressperson'
-    icpsr = Column(Integer, primary_key=True) 
+    icpsr = Column(Integer, primary_key=True)
     bioname = Column(String)
     parties = relationship('CongresspersonParty', back_populates='congressperson')
     states = relationship('State', secondary=congressperson_state, back_populates='congresspersons')
