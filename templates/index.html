@@ -2,32 +2,77 @@
 <html>
 <head>
     <title>VoteView Visualizations</title>
+    <script src="https://d3js.org/d3.v5.min.js"></script>
 </head>
 <body>
-    <script>
-    // Get the data 
-    var getCongressByNumber = function(n) {
-        p = new Promise(
-            function(resolve, reject) {
-                const xhr = new XMLHttpRequest();
-                xhr.open("GET", "http://127.0.0.1:5000/congress/1");
-                xhr.onload = () => resolve(xhr.responseText);
-                xhr.onerror = () => reject(xhr.statusText);
-                xhr.send()
-            }
-        );
-        var data;
-        p.then(
-            (value) => {
-                data = JSON.parse(value);
-            }
-        );
-    }
-    </script>
     <div id="app">
     <!-- This will be especially useful when I put Vue in here -->
+        <div id="controls">
+          Congress: 
+          <select id="congress_num_select">
+          
+          </select>
+        </div>
         <div id="dot-visualization">
         </div>
     </div>
+    <script>
+    // Get the data 
+    var margins = {
+    	width: 250,
+      height: 250
+    }
+    
+    var svg = d3.select('#app')
+	    .append('svg')
+      .attr('width', margins.width)
+      .attr('height', margins.height)
+    var data;
+    // const cor = d3.scaleOrdinal()
+
+    var congress;
+    if (window.location.search.substr(1).includes('congress')) {
+      congress = window.location.search.substr(1).substring("congress".length+1);
+      // hacky, but eh
+    } else {
+      congress = 1;
+    }
+    d3.json('/congress/'+congress).then(function(d) {
+      /*const parties = d3.map(d, d=>d.party).keys()
+      const cores = ['orange', 'green', 'gray']
+      cor.domain(parties)
+        .range(cores)
+      data = d; 
+      console.log(parties);
+
+      svg.datum(d).call(parliament);
+      const circles = d3.selectAll('svg circle')
+        .attr('fill', d => cor(d.party.party)) */
+      d3.select('body')
+        .selectAll('p')
+        .data(d)
+        .enter()
+        .append('p')
+        .text(function(d) {
+          return d.bioname + ', ' + d.party;
+        });
+
+      data = d;
+    });
+
+    // auto-invoker
+    (function() {
+      // populate select tag
+       
+      d3.select('#congress_num_select')
+        .selectAll('option')
+        .data(d3.range(1, 116))
+        .enter()
+        .append('option')
+        .attr('value', function(d) { return d; })
+        .text(function(d) { return d; });
+      
+    })();
+    </script>
 </body>
 </html>

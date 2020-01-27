@@ -1,8 +1,7 @@
 # Routes for API will go here
-from flask import Flask, render_template, url_for
+from flask import Flask, render_template, url_for, jsonify
 from db_scripts.models import *
 from helpers import *
-import json
 
 
 app = Flask(__name__)
@@ -23,7 +22,7 @@ def get_by_congress(num):
                 }
         congress.append(datum)
     sesh.close()
-    return json.dumps(congress)
+    return jsonify(congress)
 
 
 @app.route('/')
