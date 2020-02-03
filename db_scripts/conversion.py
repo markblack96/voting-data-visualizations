@@ -43,7 +43,7 @@ for congress in congresses:
             congressperson = Congressperson(
                                 icpsr=int(con.icpsr),
                                 bioname=con.bioname
-                             )
+            )
             session.add(congressperson)
         congressperson = session.query(Congressperson).filter_by(icpsr=int(con.icpsr)).first()
         c_p = CongresspersonParty(
@@ -57,6 +57,16 @@ for congress in congresses:
         c_p.party = session.query(Party).filter_by(party_code=c_p.party_code).first()
         c_p.congressperson = congressperson
         session.add(c_p)
+
+# add congresspeople to states
+cons = session.query(Congressperson).all()
+states = session.query(State).all() # this works but is excruciatingly slow b/c cons is huge
+for state in states:
+    for con in cons:
+        cons_states = members[members['icpsr'] == con.icpsr].state_icpsr.unique()
+        if state.state_icpsr in cons_states:
+            state.congresspersons.append(con)
+            session.add(state)
 
 session.commit()
 session.close()

@@ -18,7 +18,8 @@ def get_by_congress(num):
                     'bioname': con.congressperson.bioname, 
                     'party': con.party.party_name,
                     'chamber': con.chamber,
-                    'state': con.state
+                    'state': con.state,
+                    'district': con.district
                 }
         congress.append(datum)
     sesh.close()
