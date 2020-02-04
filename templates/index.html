@@ -2,15 +2,17 @@
 <html>
 <head>
     <title>VoteView Visualizations</title>
+    <link rel="stylesheet" href="https://unpkg.com/teutonic-css@0.7.13/teutonic.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='visualizations.css') }}">
     <script src="https://d3js.org/d3.v5.min.js"></script>
     <script src="{{ url_for('static', filename='congress-vis.js') }}"></script>
 </head>
 <body>
-    <div id="app">
+    <div id="app" class="centered">
     <!-- This will be especially useful when I put Vue in here -->
         <div id="controls">
           Congress: 
-          <select id="congress_num_select" onchange="showCongress()">
+          <select class="select read_s" id="congress_num_select" onchange="showCongress()">
           
           </select>
         </div>
