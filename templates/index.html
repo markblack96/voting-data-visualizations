@@ -5,6 +5,7 @@
     <link rel="stylesheet" href="https://unpkg.com/teutonic-css@0.7.13/teutonic.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='visualizations.css') }}">
     <script src="https://d3js.org/d3.v5.min.js"></script>
+    <script src="{{ url_for('static', filename='utilities.js') }}"></script>
     <script src="{{ url_for('static', filename='congress-vis.js') }}"></script>
 </head>
 <body>
@@ -13,8 +14,11 @@
         <div id="controls">
           Congress: 
           <select class="select read_s" id="congress_num_select" onchange="showCongress()">
-          
+            <option value="" disabled selected>Select</option>
           </select>
+        </div>
+        <div id="congress_holder">
+
         </div>
     </div>
     <script>
@@ -32,15 +36,11 @@
     // auto-invoker
     (function() {
       // populate select tag
-       
-      d3.select('#congress_num_select')
-        .selectAll('option')
-        .data(d3.range(1, 116))
-        .enter()
-        .append('option')
-        .attr('value', function(d) { return d; })
-        .text(function(d) { return d; });
-      
+      let range = d3.range(1, 116);
+      let select = document.getElementById('congress_num_select');
+      for (i in range) {
+        select.appendChild(new Option(range[i], range[i], false, false));
+      }
     })();
     </script>
 </body>
