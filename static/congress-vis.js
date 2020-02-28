@@ -22,32 +22,44 @@ function congress(n) {
     }
     const partyDivs = d3.select('#app').selectAll('div .party').data(Object.keys(membersOfParties))
     partyDivs.enter().append('div').attr("class", "party").text(function(d, i) { return d;})
-    let idx = 0; // time to hack!
+
+    // append groups for each 
+    var g = d3.select('svg')
+      .selectAll('g')
+      .data(parties)
+        .attr('class', function(d) { return d.replace(".", ""); })
+        .attr('transform', function(d, i) { return "translate(" + i * 160 + ")"; });
+
+    g.enter().append("g")
+      .attr('class', function(d) { return d.replace(".", ""); })
+      .attr('transform', function(d, i) { return "translate(" + i * 160 + ")"; });
+
+    g.exit().remove();
+    
+    var congress = d3.selectAll('g')
+      .data(parties).selectAll('circle')
+      .data(function(d) { console.log(membersOfParties); return membersOfParties[d]; })
+        .attr("cx", function(d, i) { return 10 + i%10 * 15;})
+        .attr("cy", function(d, i) { return 10 + Math.floor(i/10) * 15; })
+        .attr("r", 10+"px");
+
+    congress.enter().append("circle")
+      .attr("cx", function(d, i) { return 10 + i%10 * 15;})
+      .attr("cy", function(d, i) { return 10 + Math.floor(i/10) * 15; })
+      .attr("r", 10+"px");
+
+    congress.exit().remove();
+    
+      let idx = 0; // time to hack!
     for (p in membersOfParties) {
       let header = document.createElement('h3');
       header.textContent = p;
       document.getElementById(p).append(header);
       d3.select('#' + p).selectAll('p').data(membersOfParties[p]).enter().append('p')
         .text(function(d) { return d.bioname; });
-      
-      let svg = d3.select('svg').append('g').attr("class", p);
-      svg.attr("transform", "translate("+idx*150+")");
-      svg.data(Object.keys(membersOfParties)).exit().remove();      
-      let congress = svg.selectAll('circle').data(membersOfParties[p])
-        .attr("cx", function(d, i) { return 10 + i%10 * 15;})
-        .attr("cy", function(d, i) { return 10 + Math.floor(i/10) * 15; })
-        .attr("r", 10+"px");
-
-      congress.enter().append("circle")
-        .attr("cx", function(d, i) { return 10 + i%10 * 15;})
-        .attr("cy", function(d, i) { return 10 + Math.floor(i/10) * 15; })
-        .attr("r", 10+"px");
-
-      congress.exit().remove();
-      idx+=1;
     }
-
-    /* const congress = d3.select('#congress_holder')
+    /*
+    const congress = d3.select('#congress_holder')
       .selectAll('p')
       .data(data);
 
@@ -67,6 +79,6 @@ function congress(n) {
 function showCongress() {
   // get the selected option
   let selectedIndex = document.getElementById('congress_num_select').options.selectedIndex;
-  selectedCongress = document.getElementById('congress_num_select').options[selectedIndex].value; // hilariously verbose
+  let selectedCongress = document.getElementById('congress_num_select').options[selectedIndex].value; // hilariously verbose
   congress(selectedCongress);
 }

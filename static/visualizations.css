@@ -2,3 +2,24 @@
     margin: 0 auto;
     max-width: 88%;    
 }
+circle {
+    stroke: black;
+}
+.Pro-Administration circle {
+    fill: green;
+}
+.Federalist circle {
+    fill: darkgreen;
+}
+.Anti-Administration circle {
+    fill: turquoise;
+}
+.Democrat-Republican circle {
+    fill: darkblue;
+}
+.Republican circle {
+    fill: red;
+}
+.Democrat circle {
+    fill: blue;
+}
