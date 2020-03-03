@@ -5,6 +5,9 @@
 circle {
     stroke: black;
 }
+.Independent circle {
+    fill: gray;
+}
 .Pro-Administration circle {
     fill: green;
 }
@@ -20,6 +23,31 @@ circle {
 .Republican circle {
     fill: red;
 }
+.IndRepublican circle {
+    fill: darkred;
+}
 .Democrat circle {
     fill: blue;
+}
+.Unionist circle {
+    fill: orange;
+}
+.UnconditionalUnionist circle {
+    fill: darkorange;
+}
+.IndDemocrat {
+    fill: darkslateblue;
+}
+
+.houseSenateGrid {
+    grid-template-columns: 2;
+    grid-template-rows: 1;
+}
+#house_holder {
+    grid-column-start: 1;
+    grid-column-end: span 1;
+}
+#senate_holder {
+    grid-column-start: 2;
+    grid-column-end: span 1;
 }

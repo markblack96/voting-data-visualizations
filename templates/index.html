@@ -6,7 +6,8 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='visualizations.css') }}">
     <script src="https://d3js.org/d3.v5.min.js"></script>
     <script src="{{ url_for('static', filename='utilities.js') }}"></script>
-    <script src="{{ url_for('static', filename='congress-vis.js') }}"></script>
+    <!-- script src="{{ url_for('static', filename='congress-vis.js') }}"></script-->
+    <script src="{{ url_for('static', filename='house-and-senate.js') }}"></script>
 </head>
 <body>
     <div id="app" class="centered">
@@ -17,26 +18,33 @@
             <option value="" disabled selected>Select</option>
           </select>
         </div>
-        <div id="congress_holder">
-
-        </div>
+        <div class="houseSenateGrid"></div>
+        <div id="house_holder"></div>
+        <div id="senate_holder"></div>
     </div>
     <script>
     // Get the data 
     var margins = {
-    	width: 750,
-      height: 500
+    	width: 640,
+      height: 420
     }
     
-    var svg = d3.select('#congress_holder')
+    const houseSvg = d3.select('#house_holder')
 	    .append('svg')
         .attr('width', margins.width)
-        .attr('height', margins.height);
+        .attr('height', margins.height)
+        .attr('class', 'house');
     
+    const senateSvg = d3.select('#senate_holder')
+	    .append('svg')
+        .attr('width', margins.width)
+        .attr('height', margins.height)
+        .attr('class', 'house');
+
     // auto-invoker
     (function() {
       // populate select tag
-      let range = d3.range(1, 116);
+      let range = d3.range(1, 117);
       let select = document.getElementById('congress_num_select');
       for (i in range) {
         select.appendChild(new Option(range[i], range[i], false, false));
