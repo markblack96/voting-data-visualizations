@@ -22,18 +22,58 @@ function congress(n) {
                 function(d) { return d.party===party; }
             )
         }
+        // sort house data by size of party so largest parties get display first
+        parties.sort(function(a, b) {
+            return houseMembersByParty[b].length - houseMembersByParty[a].length;
+        });
+        if (Object.keys(houseMembersByParty).length > 2) {
+            d3.select('svg.house').attr('width', function() {
+                return Object.keys(houseMembersByParty).length * 200;
+            })
+        }
+        // idea: manage state for g (x, y) coords with an object
+        let positions = [];
+        for (var i=0; i<parties.length; i++) {
+            let x = (i, prevParty)=> {
+                if (i > 0){
+                    if (prevParty.length < 10) {
+                        return positions[i-1].x + (20*prevParty.length);
+                    } else {
+                        return positions[i-1].x + 200;
+                    }
+                } else {
+                    return 0;
+                }
+            }
+            positions.push({
+                'class': parties[i].replace(".", "").replace(' ', ''),
+                'x': x(i, houseMembersByParty[parties[i-1]])// i > 0 ?  positions[i-1].x + 20 * houseMembersByParty[parties[i-1]].length : 0
+                
+            })
+        }
+        console.log(positions);
+
         let g = d3.select('.house')
             .selectAll('g')
             .data(parties)
                 .attr('class', function(d) { return d.replace(".", "").replace(' ', '');})
                 .attr('transform', function(d, i) {
-                    return "translate(" + i * 200 + ")"; 
-                });
+                    let translateFactor = 0;
+                    if (i>0 && houseMembersByParty[parties[i-1]].length <= 5) {
+                        translateFactor = 100;
+                    }
+                    return "translate(" + (positions.find(party => party.class === d.replace(".", "").replace(' ', '')).x) + ")";//return "translate(" + (i * 200 - translateFactor) + ")"; 
+                    // return "translate(" + i * 200 + ")"; 
+                })
         
         g.enter().append('g')
             .attr('class', function(d) { return d.replace(".", "").replace(' ', '');})
             .attr('transform', function(d, i) {
-                return "translate(" + i * 200 + ")"; 
+                let translateFactor = 0;
+                if (i>0 && houseMembersByParty[parties[i-1]].length <= 5) {
+                    translateFactor = 100;
+                }
+                return "translate(" + (positions.find(party => party.class === d.replace(".", "").replace(' ', '')).x) + ")";// "translate(" + (i * 200 - translateFactor) + ")"; 
             });
 
         g.exit().remove();

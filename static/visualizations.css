@@ -38,7 +38,33 @@ circle {
 .IndDemocrat {
     fill: darkslateblue;
 }
-
+.Adams-ClayRepublican {
+    fill: lightyellow;
+}
+.JacksonRepublican {
+    fill: lightblue;
+}
+.CrawfordRepublican {
+    fill: darkblue;
+}
+.Adams-ClayFederalist {
+    fill: forestgreen;
+}
+.JacksonFederalist {
+    fill: lightgreen;
+}
+.CrawfordFederalist {
+    fill: darkgreen;
+}
+.Adams {
+    fill: lightyellow;
+}
+.Jackson {
+    fill: lightgreen;
+}
+.Whig {
+    fill: beige;
+}
 .houseSenateGrid {
     grid-template-columns: 2;
     grid-template-rows: 1;
