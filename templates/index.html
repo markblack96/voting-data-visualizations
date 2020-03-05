@@ -18,9 +18,12 @@
             <option value="" disabled selected>Select</option>
           </select>
         </div>
-        <div class="houseSenateGrid"></div>
-        <div id="house_holder"></div>
-        <div id="senate_holder"></div>
+        <div class="scroll-h">
+          <div class="wrap-no">
+            <div id="house_holder"></div>
+            <div id="senate_holder"></div>
+          </div>
+        </div>
     </div>
     <script>
     // Get the data 
@@ -39,7 +42,7 @@
 	    .append('svg')
         .attr('width', margins.width)
         .attr('height', margins.height)
-        .attr('class', 'house');
+        .attr('class', 'senate');
 
     // auto-invoker
     (function() {
