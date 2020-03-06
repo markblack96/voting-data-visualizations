@@ -1,3 +1,14 @@
+div.tooltip {
+    color: white;
+    position: absolute;
+    width: auto;
+    height: auto;
+    padding: 0.8em;
+    font: 1rem sans-serif;
+    background: rgb(119, 136, 153);
+    border: 2px solid black;
+    pointer-events: none;
+}
 .centered div {
     margin: 0 auto;
     max-width: 88%;    

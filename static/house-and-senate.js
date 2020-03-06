@@ -1,5 +1,8 @@
 // house and senate visualizations, separated
-
+const tooltip = d3.select("body")
+      .append("div")	
+        .attr("class", "tooltip")				
+        .style("opacity", 0);
 // retrieves house & senate data from the api and displays it
 var dataGlobal;
 function congress(n) {
@@ -85,9 +88,20 @@ function congress(n) {
                 .attr('cy', function(d, i){return 10 + Math.floor(i/10) * 20;})
                 .attr('r', 8+'px')
                 .on('mouseover', function(d) { 
-                    d3.select(this).attr('stroke-width', 3) 
+                    d3.select(this).attr('stroke-width', 3);
+                    d3.select('.tooltip').transition().duration(100).style('opacity', 0.9);
+                    d3.select('.tooltip').html(`
+                        <ul>
+                            <li>${d.bioname}</li>
+                            <li>${d.party}</li>
+                        </ul>
+                    `);
+                    d3.select('.tooltip')
+                        .style('left', d3.event.pageX + 'px')
+                        .style('top', d3.event.pageY - 28 + 'px');
                 }).on('mouseout', function(d) { 
                     d3.select(this).attr('stroke-width', 1) 
+                    d3.select('.tooltip').style('opacity', 0);
                 });
         
         houseMembers.enter().append('circle')
@@ -95,10 +109,20 @@ function congress(n) {
             .attr('cy', function(d, i){return 10 + Math.floor(i/10) * 20;})
             .attr('r', 8+'px')
             .on('mouseover', function(d) { 
-                d3.select(this).attr('stroke-width', 3) 
-            })
-            .on('mouseout', function(d) { 
+                d3.select(this).attr('stroke-width', 3);
+                d3.select('.tooltip').transition().duration(100).style('opacity', 0.9);
+                d3.select('.tooltip').html(`
+                    <ul>
+                        <li>${d.bioname}</li>
+                        <li>${d.party}</li>
+                    </ul>
+                `);
+                d3.select('.tooltip')
+                        .style('left', d3.event.pageX + 'px')
+                        .style('top', d3.event.pageY + 'px');
+            }).on('mouseout', function(d) { 
                 d3.select(this).attr('stroke-width', 1) 
+                d3.select('.tooltip').style('opacity', 0);
             });
         houseMembers.exit().remove();
 
@@ -115,18 +139,47 @@ function congress(n) {
                 function(d) { return d.party===party; }
             )
         }
+
+        positions = [];
+        for (var i=0; i<parties.length; i++) {
+            let x = (i, prevParty)=> {
+                if (i > 0){
+                    if (prevParty.length < 10) {
+                        return positions[i-1].x + (20*prevParty.length);
+                    } else {
+                        return positions[i-1].x + 200;
+                    }
+                } else {
+                    return 0;
+                }
+            }
+            positions.push({
+                'class': parties[i].replace(".", "").replace(' ', ''),
+                'x': x(i, senatorsByParty[parties[i-1]])// i > 0 ?  positions[i-1].x + 20 * houseMembersByParty[parties[i-1]].length : 0
+                
+            })
+        }
+
         g = d3.select('svg.senate')
             .selectAll('g')
             .data(parties)
                 .attr('class', function(d) { return d.replace(".", "").replace(' ', '');})
                 .attr('transform', function(d, i) {
-                    return "translate(" + i * 200 + ")"; 
+                    let translateFactor = 0;
+                    if (i>0 && houseMembersByParty[parties[i-1]].length <= 5) {
+                        translateFactor = 100;
+                    }
+                    return "translate(" + (positions.find(party => party.class === d.replace(".", "").replace(' ', '')).x) + ")";// "translate(" + (i * 200 - translateFactor) + ")"; 
                 });
         
         g.enter().append('g')
             .attr('class', function(d) { return d.replace(".", "").replace(' ', '');})
             .attr('transform', function(d, i) {
-                return "translate(" + i * 200 + ")"; 
+                let translateFactor = 0;
+                if (i>0 && houseMembersByParty[parties[i-1]].length <= 5) {
+                    translateFactor = 100;
+                }
+                return "translate(" + (positions.find(party => party.class === d.replace(".", "").replace(' ', '')).x) + ")";// "translate(" + (i * 200 - translateFactor) + ")"; 
             });
 
         g.exit().remove();
@@ -138,9 +191,20 @@ function congress(n) {
                 .attr('cy', function(d, i){return 10 + Math.floor(i/10) * 20;})
                 .attr('r', 8+'px')
                 .on('mouseover', function(d) { 
-                    d3.select(this).attr('stroke-width', 3) 
+                    d3.select(this).attr('stroke-width', 3);
+                    d3.select('.tooltip').transition().duration(100).style('opacity', 0.9);
+                    d3.select('.tooltip').html(`
+                        <ul>
+                            <li>${d.bioname}</li>
+                            <li>${d.party}</li>
+                        </ul>
+                    `);
+                    d3.select('.tooltip')
+                            .style('left', d3.event.pageX + 'px')
+                            .style('top', d3.event.pageY - 28 + 'px');
                 }).on('mouseout', function(d) { 
                     d3.select(this).attr('stroke-width', 1) 
+                    d3.select('.tooltip').style('opacity', 0);
                 });
         
         senateMembers.enter().append('circle')
@@ -148,10 +212,20 @@ function congress(n) {
             .attr('cy', function(d, i){return 10 + Math.floor(i/10) * 20;})
             .attr('r', 8+'px')
             .on('mouseover', function(d) { 
-                d3.select(this).attr('stroke-width', 3) 
-            })
-            .on('mouseout', function(d) { 
+                d3.select(this).attr('stroke-width', 3);
+                d3.select('.tooltip').transition().duration(100).style('opacity', 0.9);
+                d3.select('.tooltip').html(`
+                    <ul>
+                        <li>${d.bioname}</li>
+                        <li>${d.party}</li>
+                    </ul>
+                `);
+                d3.select('.tooltip')
+                        .style('left', d3.event.pageX + 'px')
+                        .style('top', d3.event.pageY - 28 + 'px');
+            }).on('mouseout', function(d) { 
                 d3.select(this).attr('stroke-width', 1) 
+                d3.select('.tooltip').style('opacity', 0);
             });
         senateMembers.exit().remove();
 
