@@ -15,7 +15,8 @@ def get_by_congress(num):
     congress = []
     for con in chosen_congress:
         datum = {
-                    'bioname': con.congressperson.bioname, 
+                    'bioname': con.congressperson.bioname,
+                    'icpsr': con.congressperson.icpsr,
                     'party': con.party.party_name,
                     'chamber': con.chamber,
                     'state': con.state,
@@ -25,6 +26,9 @@ def get_by_congress(num):
     sesh.close()
     return jsonify(congress)
 
+@app.route('/votes/<icpsr>/<congress_num>')
+def get_votes(icpsr, congress_num):
+    pass
 
 @app.route('/')
 def index():

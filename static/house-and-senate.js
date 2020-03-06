@@ -2,6 +2,18 @@
 
 // retrieves house & senate data from the api and displays it
 var dataGlobal;
+const bioTemplate = (person)=>{
+    return `
+        <h5>${person.bioname}</h5>
+        <ul>
+            <li>${person.chamber}</li>
+            <li>${person.party}</li>
+            <li>${person.state}${person.chamber === 'House' ? ", district " + person.district : ''}</li>
+        </ul>
+        <button class="button" id="showVotes">Show Votes</button>
+        <div id="votes"></div>
+    `
+}
 function congress(n) {
     d3.json('/congress/' + n).then(function(data) {
         dataGlobal = data;
@@ -47,7 +59,7 @@ function congress(n) {
             }
             positions.push({
                 'class': parties[i].replace(".", "").replace(' ', ''),
-                'x': x(i, houseMembersByParty[parties[i-1]])// i > 0 ?  positions[i-1].x + 20 * houseMembersByParty[parties[i-1]].length : 0
+                'x': x(i, houseMembersByParty[parties[i-1]])
                 
             })
         }
@@ -62,8 +74,7 @@ function congress(n) {
                     if (i>0 && houseMembersByParty[parties[i-1]].length <= 5) {
                         translateFactor = 100;
                     }
-                    return "translate(" + (positions.find(party => party.class === d.replace(".", "").replace(' ', '')).x) + ")";//return "translate(" + (i * 200 - translateFactor) + ")"; 
-                    // return "translate(" + i * 200 + ")"; 
+                    return "translate(" + (positions.find(party => party.class === d.replace(".", "").replace(' ', '')).x) + ")";
                 })
         
         g.enter().append('g')
@@ -88,9 +99,10 @@ function congress(n) {
                     d3.select(this).attr('stroke-width', 3);
                     d3.select('.tooltip').transition().duration(100).style('opacity', 0.9);
                     d3.select('.tooltip').html(`
+                        <h5>${d.bioname}</h5>
                         <ul>
-                            <li>${d.bioname}</li>
                             <li>${d.party}</li>
+                            <li>{d.state}${d.chamber === 'House' ? ", district " + d.district : ''}</li>
                         </ul>
                     `);
                     d3.select('.tooltip')
@@ -103,12 +115,12 @@ function congress(n) {
                     // set biography data
                     d3.select('#biography')
                         .html(`
-                            <h5>${d.bioname}</h5>
-                            <ul>
+                        <h5>${d.bioname}</h5>
+                        <ul>
                             <li>${d.party}</li>
-                            <li>${d.state}, district ${d.district}</li>
-                            </ul>
-                        `)
+                            <li>${d.state}${d.chamber === 'House' ? ", district " + d.district : ''}</li>
+                        </ul>
+                    `)
                 });
         
         houseMembers.enter().append('circle')
@@ -119,11 +131,12 @@ function congress(n) {
                 d3.select(this).attr('stroke-width', 3);
                 d3.select('.tooltip').transition().duration(100).style('opacity', 0.9);
                 d3.select('.tooltip').html(`
-                    <ul>
-                        <li>${d.bioname}</li>
-                        <li>${d.party}</li>
-                    </ul>
-                `);
+                <h5>${d.bioname}</h5>
+                <ul>
+                    <li>${d.party}</li>
+                    <li>${d.state}, district ${d.district}</li>
+                </ul>
+            `);
                 d3.select('.tooltip')
                         .style('left', d3.event.pageX + 'px')
                         .style('top', d3.event.pageY + 'px');
@@ -134,12 +147,12 @@ function congress(n) {
                 // set biography data
                 d3.select('#biography')
                     .html(`
-                        <h5>${d.bioname}</h5>
-                        <ul>
+                    <h5>${d.bioname}</h5>
+                    <ul>
                         <li>${d.party}</li>
-                        <li>${d.state}, district ${d.district}</li>
-                        </ul>
-                    `)
+                        <li>${d.state}${d.chamber === 'House' ? ", district " + d.district : ''}</li>
+                    </ul>
+                `)
             });
         houseMembers.exit().remove();
 
@@ -211,11 +224,12 @@ function congress(n) {
                     d3.select(this).attr('stroke-width', 3);
                     d3.select('.tooltip').transition().duration(100).style('opacity', 0.9);
                     d3.select('.tooltip').html(`
-                        <ul>
-                            <li>${d.bioname}</li>
-                            <li>${d.party}</li>
-                        </ul>
-                    `);
+                    <h5>${d.bioname}</h5>
+                    <ul>
+                        <li>${d.party}</li>
+                        <li>${d.state}</li>
+                    </ul>
+                `);
                     d3.select('.tooltip')
                             .style('left', d3.event.pageX + 'px')
                             .style('top', d3.event.pageY - 28 + 'px');
@@ -228,8 +242,8 @@ function congress(n) {
                         .html(`
                             <h5>${d.bioname}</h5>
                             <ul>
-                            <li>${d.party}</li>
-                            <li>${d.state}, district ${d.district}</li>
+                                <li>${d.party}</li>
+                                <li>${d.state}${d.chamber === 'House' ? ", district " + d.district : ''}</li>
                             </ul>
                         `)
                 });
@@ -242,9 +256,10 @@ function congress(n) {
                 d3.select(this).attr('stroke-width', 3);
                 d3.select('.tooltip').transition().duration(100).style('opacity', 0.9);
                 d3.select('.tooltip').html(`
+                    <h5>${d.bioname}</h5>
                     <ul>
-                        <li>${d.bioname}</li>
                         <li>${d.party}</li>
+                        <li>${d.state}</li>
                     </ul>
                 `);
                 d3.select('.tooltip')
@@ -259,8 +274,8 @@ function congress(n) {
                     .html(`
                         <h5>${d.bioname}</h5>
                         <ul>
-                        <li>${d.party}</li>
-                        <li>${d.state}, district ${d.district}</li>
+                            <li>${d.party}</li>
+                            <li>${d.state}</li>
                         </ul>
                     `)
             });
