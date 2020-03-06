@@ -1,8 +1,5 @@
 // house and senate visualizations, separated
-const tooltip = d3.select("body")
-      .append("div")	
-        .attr("class", "tooltip")				
-        .style("opacity", 0);
+
 // retrieves house & senate data from the api and displays it
 var dataGlobal;
 function congress(n) {
@@ -102,6 +99,16 @@ function congress(n) {
                 }).on('mouseout', function(d) { 
                     d3.select(this).attr('stroke-width', 1) 
                     d3.select('.tooltip').style('opacity', 0);
+                }).on('click', function(d) {
+                    // set biography data
+                    d3.select('#biography')
+                        .html(`
+                            <h5>${d.bioname}</h5>
+                            <ul>
+                            <li>${d.party}</li>
+                            <li>${d.state}, district ${d.district}</li>
+                            </ul>
+                        `)
                 });
         
         houseMembers.enter().append('circle')
@@ -123,6 +130,16 @@ function congress(n) {
             }).on('mouseout', function(d) { 
                 d3.select(this).attr('stroke-width', 1) 
                 d3.select('.tooltip').style('opacity', 0);
+            }).on('click', function(d) {
+                // set biography data
+                d3.select('#biography')
+                    .html(`
+                        <h5>${d.bioname}</h5>
+                        <ul>
+                        <li>${d.party}</li>
+                        <li>${d.state}, district ${d.district}</li>
+                        </ul>
+                    `)
             });
         houseMembers.exit().remove();
 
@@ -205,6 +222,16 @@ function congress(n) {
                 }).on('mouseout', function(d) { 
                     d3.select(this).attr('stroke-width', 1) 
                     d3.select('.tooltip').style('opacity', 0);
+                }).on('click', function(d) {
+                    // set biography data
+                    d3.select('#biography')
+                        .html(`
+                            <h5>${d.bioname}</h5>
+                            <ul>
+                            <li>${d.party}</li>
+                            <li>${d.state}, district ${d.district}</li>
+                            </ul>
+                        `)
                 });
         
         senateMembers.enter().append('circle')
@@ -226,6 +253,16 @@ function congress(n) {
             }).on('mouseout', function(d) { 
                 d3.select(this).attr('stroke-width', 1) 
                 d3.select('.tooltip').style('opacity', 0);
+            }).on('click', function(d) {
+                // set biography data
+                d3.select('#biography')
+                    .html(`
+                        <h5>${d.bioname}</h5>
+                        <ul>
+                        <li>${d.party}</li>
+                        <li>${d.state}, district ${d.district}</li>
+                        </ul>
+                    `)
             });
         senateMembers.exit().remove();
 
