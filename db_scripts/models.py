@@ -1,5 +1,5 @@
 # Here's where we're going to place our models, for use in our DB conversion script and later in the API
-from sqlalchemy import Column, Integer, String, ForeignKey, Table
+from sqlalchemy import Column, Integer, String, Date, ForeignKey, Table
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.declarative import declarative_base
 
@@ -36,6 +36,7 @@ class Congressperson(Base):
     bioname = Column(String)
     parties = relationship('CongresspersonParty', back_populates='congressperson')
     states = relationship('State', secondary=congressperson_state, back_populates='congresspersons')
+    votes = relationship('Vote')
     def __repr__(self):
         return "<Congressperson(bioname='%s')>" % (self.bioname)
 
@@ -66,3 +67,25 @@ class State(Base):
     state_abbrev = Column(String)
     congresspersons = relationship('Congressperson', secondary=congressperson_state, back_populates='states')
 
+# todo: determine primary key
+class Vote(Base):
+    __tablename__ = 'vote'
+    congress_num = Column(Integer)
+    chamber = Column(String)
+    rollnumber = Column(Integer)
+    icpsr = Column(Integer, ForeignKey('congressperson.icpsr'))
+    cast_code = Column(Integer) # this will need a reference table
+    # data has a probability code but i don't want to use it yet
+
+
+class Rollcall(Base):
+    __tablename__ = 'rollcall'
+    congress_num = Column(Integer)
+    chamber = Column(String)
+    rollnumber = Column(Integer)
+    date = Column(Date)
+    session = Column(Integer)
+    bill_number = Column(String)
+    vote_result = Column(String)
+    vote_question = Column(String)
+    dtl_desc = Column(String)

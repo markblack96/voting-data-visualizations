@@ -11,7 +11,7 @@ const bioTemplate = (person)=>{
             <li>${person.state}${person.chamber === 'House' ? ", district " + person.district : ''}</li>
         </ul>
         <button class="button" id="showVotes">Show Votes</button>
-        <div id="votes"></div>
+        <div id="biography-votes"></div>
     `
 }
 function congress(n) {
