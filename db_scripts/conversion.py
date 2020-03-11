@@ -68,6 +68,30 @@ for state in states:
             state.congresspersons.append(con)
             session.add(state)
 
+# add votes (this might take a while)
+votes = pd.read_csv('data/HSall_votes.csv') # a hefty boy... >1,000,000 rows, 604 MB of data
+rollcalls = pd.read_csv('data/HSall_rollcalls.csv', low_memory=False)
+
+for i in range(len(votes)):
+    session.add(Vote(congress_num=int(votes.loc[i].congress), chamber=votes.loc[i].chamber, rollnumber=int(votes.loc[i].rollnumber), icpsr=int(votes.loc[i].icpsr), cast_code=votes.loc[i]))
+
+for i in range(len(rollcalls)):
+    session.add(
+        Rollcall(
+            congress_num = int(rollcalls.loc[i].congress),
+            chamber = rollcalls.loc[i].chamber,
+            rollnumber = int(rollcalls.loc[i].rollnumber),
+            date = rollcalls.loc[i].date,
+            session = rollcalls.loc[i].session,
+            bill_number = rollcalls.loc[i].bill_number,
+            yea_count = int(rollcalls.loc[i].yea_count),
+            nay_count = int(rollcalls.loc[i].nay_count),
+            vote_result = rollcalls.loc[i].vote_result,
+            vote_question = rollcalls.loc[i].vote_question,
+            dtl_desc = rollcalls.loc[i].dtl_desc
+        )
+    )
+
 session.commit()
 session.close()
 end = time.time()

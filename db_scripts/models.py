@@ -70,22 +70,24 @@ class State(Base):
 # todo: determine primary key
 class Vote(Base):
     __tablename__ = 'vote'
-    congress_num = Column(Integer)
+    congress_num = Column(Integer, primary_key=True)
     chamber = Column(String)
-    rollnumber = Column(Integer)
-    icpsr = Column(Integer, ForeignKey('congressperson.icpsr'))
+    rollnumber = Column(Integer, primary_key=True)
+    icpsr = Column(Integer, ForeignKey('congressperson.icpsr'), primary_key=True)
     cast_code = Column(Integer) # this will need a reference table
     # data has a probability code but i don't want to use it yet
 
 
 class Rollcall(Base):
     __tablename__ = 'rollcall'
-    congress_num = Column(Integer)
+    congress_num = Column(Integer, primary_key=True)
     chamber = Column(String)
-    rollnumber = Column(Integer)
+    rollnumber = Column(Integer, primary_key=True)
     date = Column(Date)
     session = Column(Integer)
-    bill_number = Column(String)
+    bill_number = Column(String, primary_key=True)
+    yea_count = Column(Integer)
+    nay_count = Column(Integer)
     vote_result = Column(String)
     vote_question = Column(String)
     dtl_desc = Column(String)
