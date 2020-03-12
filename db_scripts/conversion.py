@@ -15,6 +15,7 @@ Base.metadata.create_all(engine)
 Session = sessionmaker(bind=engine)
 session = Session()
 
+"""
 # populate states
 states = members[['state_abbrev', 'state_icpsr']].drop_duplicates()
 for i in range(len(states)):
@@ -67,17 +68,27 @@ for state in states:
         if state.state_icpsr in cons_states:
             state.congresspersons.append(con)
             session.add(state)
-
+"""
 # add votes (this might take a while)
+print("About to open HSall_votes")
 votes = pd.read_csv('data/HSall_votes.csv') # a hefty boy... >1,000,000 rows, 604 MB of data
+print("HSall_votes open, about to open rollcalls")
 rollcalls = pd.read_csv('data/HSall_rollcalls.csv', low_memory=False)
+print("Rollcalls open")
 
 for i in range(len(votes)):
-    session.add(Vote(congress_num=int(votes.loc[i].congress), chamber=votes.loc[i].chamber, rollnumber=int(votes.loc[i].rollnumber), icpsr=int(votes.loc[i].icpsr), cast_code=votes.loc[i]))
+    v = Vote(congress_num=int(votes.loc[i].congress), 
+                chamber=votes.loc[i].chamber, 
+                rollnumber=int(votes.loc[i].rollnumber), 
+                icpsr=int(votes.loc[i].icpsr), 
+                cast_code=votes.loc[i]
+            )
+    session.add(v)
+    print("Added ", v)
+    print(i, "/", len(votes))
 
 for i in range(len(rollcalls)):
-    session.add(
-        Rollcall(
+    r = Rollcall(
             congress_num = int(rollcalls.loc[i].congress),
             chamber = rollcalls.loc[i].chamber,
             rollnumber = int(rollcalls.loc[i].rollnumber),
@@ -90,7 +101,9 @@ for i in range(len(rollcalls)):
             vote_question = rollcalls.loc[i].vote_question,
             dtl_desc = rollcalls.loc[i].dtl_desc
         )
-    )
+    session.add(r)
+    print("Added ", r)
+    print(i, "/", len(rollcalls))
 
 session.commit()
 session.close()
