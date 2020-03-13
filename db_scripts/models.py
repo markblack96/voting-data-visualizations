@@ -71,10 +71,10 @@ class State(Base):
 class Vote(Base):
     __tablename__ = 'vote'
     congress_num = Column(Integer, primary_key=True)
-    chamber = Column(String)
+    chamber = Column(String, primary_key=True)
     rollnumber = Column(Integer, primary_key=True)
     icpsr = Column(Integer, ForeignKey('congressperson.icpsr'), primary_key=True)
-    cast_code = Column(Integer) # this will need a reference table
+    cast_code = Column(Integer, primary_key=True) # this will need a reference table
     # data has a probability code but i don't want to use it yet
 
 

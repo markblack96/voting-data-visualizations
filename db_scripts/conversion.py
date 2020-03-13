@@ -7,8 +7,8 @@ import time
 
 start = time.time()
 engine = create_engine('sqlite:///test.db', echo=True)
-members = pd.read_csv('./data/HSall_members.csv')
-parties = pd.read_csv('./data/HSall_parties.csv')
+# members = pd.read_csv('./data/HSall_members.csv')
+# parties = pd.read_csv('./data/HSall_parties.csv')
 Base.metadata.create_all(engine)
 
 # session stuff
@@ -81,11 +81,13 @@ for i in range(len(votes)):
                 chamber=votes.loc[i].chamber, 
                 rollnumber=int(votes.loc[i].rollnumber), 
                 icpsr=int(votes.loc[i].icpsr), 
-                cast_code=votes.loc[i]
+                cast_code=int(votes.loc[i].cast_code)
             )
     session.add(v)
     print("Added ", v)
     print(i, "/", len(votes))
+    if i%5000 == 0:
+        session.commit() # commit so that we don't end up with 24,000,000 rows to commit at once, it will crash otherwise.
 
 for i in range(len(rollcalls)):
     r = Rollcall(
