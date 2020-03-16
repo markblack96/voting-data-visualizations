@@ -78,14 +78,14 @@ class Vote(Base):
     # data has a probability code but i don't want to use it yet
 
 
-class Rollcall(Base):
+class Rollcall(Base): # note to self, drop and remake table in sqlite
     __tablename__ = 'rollcall'
     congress_num = Column(Integer, primary_key=True)
-    chamber = Column(String)
+    chamber = Column(String, primary_key=True)
     rollnumber = Column(Integer, primary_key=True)
-    date = Column(Date)
+    date = Column(String)
     session = Column(Integer)
-    bill_number = Column(String, primary_key=True)
+    bill_number = Column(String)
     yea_count = Column(Integer)
     nay_count = Column(Integer)
     vote_result = Column(String)

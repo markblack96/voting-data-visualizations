@@ -7,15 +7,14 @@ import time
 
 start = time.time()
 engine = create_engine('sqlite:///test.db', echo=True)
-# members = pd.read_csv('./data/HSall_members.csv')
-# parties = pd.read_csv('./data/HSall_parties.csv')
+members = pd.read_csv('./data/HSall_members.csv')
+parties = pd.read_csv('./data/HSall_parties.csv')
 Base.metadata.create_all(engine)
 
 # session stuff
 Session = sessionmaker(bind=engine)
 session = Session()
 
-"""
 # populate states
 states = members[['state_abbrev', 'state_icpsr']].drop_duplicates()
 for i in range(len(states)):
@@ -107,9 +106,9 @@ for i in range(len(rollcalls)):
     print("Added ", r)
     print(i, "/", len(rollcalls))
 
+"""
 session.commit()
 session.close()
 end = time.time()
 time_passed = end - start
 print(f"All done! Total time: {time_passed} seconds")
-
