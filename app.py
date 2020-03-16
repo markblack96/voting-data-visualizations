@@ -28,7 +28,39 @@ def get_by_congress(num):
 
 @app.route('/votes/<icpsr>/<congress_num>')
 def get_votes(icpsr, congress_num):
-    pass
+    # todo: put castcodes in a reference table
+    cast_codes = {
+        0: 'Not a member of the chamber when this vote was taken',
+        1: 'Yea',
+        2: 'Paired Yea',
+        3: 'Announced Yea',
+        4: 'Announced Nay',
+        5: 'Paired Nay',
+        6: 'Nay',
+        7: 'Present (some Congresses)',
+        8: 'Present (some Congresses)',
+        9: 'Not Voting (Abstention)'
+    }
+    sesh = make_sesh()
+    congressperson = sesh.query(Congressperson).filter_by(icpsr=icpsr).first()
+    votes = sesh.query(Vote).filter_by(congress_num=congress_num, icpsr=icpsr).all()
+    return_data = []
+    for vote in votes:
+        rollcall = sesh.query(Rollcall).filter_by(rollnumber=vote.rollnumber, congress_num=vote.congress_num, chamber=vote.chamber).first()
+        datum = {
+            'congressperson': congressperson.bioname,
+            'cast': cast_codes[vote.cast_code],
+            # bill information
+            'yea_count': rollcall.yea_count,
+            'nay_count': rollcall.nay_count,
+            'dtl_desc': rollcall.dtl_desc,
+            'vote_question': rollcall.vote_question,
+            'vote_result': rollcall.vote_result,
+            'date': rollcall.date,
+        }
+        return_data.append(datum)
+    sesh.close()
+    return jsonify(return_data)
 
 @app.route('/')
 def index():

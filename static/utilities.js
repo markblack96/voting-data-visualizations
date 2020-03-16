@@ -1,4 +1,17 @@
 // my function junk drawer
+function voteTemplate(data) {
+  return `
+    <br>
+    <div class="vote-info box bo-h">
+      <ul>
+        <li><h5>${data.dtl_desc === 'nan' ? data.vote_question : data.dtl_desc}</h5></li>
+        <li>${data.date}</li>
+        <li>${data.cast}</li>
+        <li>Yea: ${data.yea_count}, Nay: ${data.nay_count}</li>
+      </ul>
+    </div>
+  `
+}
 function listParties(data) {
   let parties = [];
   for (d in data) {
@@ -8,9 +21,16 @@ function listParties(data) {
   }
   return parties;
 }
-function fetchVotes(icpsr, congressNum) {
+function getVotes(icpsr, congressNum) {
   // uses icpsr and congressNum to retrieve voting data for individual congresspersons
-  fetch('/votes/'+icpsr+'/'+congressNum).then(
-    //todo: this
+  d3.json('/votes/'+icpsr+'/'+congressNum).then((data)=>{
+      // clear previous vote info
+      console.log(data);
+      for (d in data) {
+        let div = document.createElement('div');
+        div.innerHTML = voteTemplate(data[d]);
+        document.querySelector('#biography').appendChild(div);
+      }
+    }
   );
 }
