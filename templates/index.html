@@ -10,8 +10,8 @@
     <script src="{{ url_for('static', filename='house-and-senate.js') }}"></script>
 </head>
 <body>
-    <div id="app" class="grid gap-no">
-      <div class="span-8 box scroll-h scroll-v">
+    <div id="app" class="flex gap-no">
+      <div class="span-twothird box">
         <div id="controls">
           Congress: 
           <select class="select read_s" id="congress_num_select" onchange="showCongress()">
@@ -24,8 +24,7 @@
           <div id="senate_holder"><h5>Senate</h5></div>
         </div>
       </div>
-      <div id="biography" class="span-4 box scroll-v"></div>
-        
+      <div id="biography" class="span-third box"></div>
     </div>
     <script>
     // Get the data 
