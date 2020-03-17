@@ -1,3 +1,6 @@
+body {
+    overflow: hidden;
+}
 div.tooltip {
     color: white;
     position: absolute;
@@ -16,65 +19,16 @@ div.tooltip {
 circle {
     stroke: black;
 }
-.Independent circle {
-    fill: gray;
+#biography {
+    height: 100vh;
+    overflow: auto;
 }
-.Pro-Administration circle {
-    fill: green;
+#congress {
+    height: 100vh;
+    overflow: auto;
 }
-.Federalist circle {
-    fill: darkgreen;
-}
-.Anti-Administration circle {
-    fill: turquoise;
-}
-.Democrat-Republican circle {
-    fill: darkblue;
-}
-.Republican circle {
-    fill: red;
-}
-.IndRepublican circle {
-    fill: darkred;
-}
-.Democrat circle {
-    fill: blue;
-}
-.Unionist circle {
-    fill: orange;
-}
-.UnconditionalUnionist circle {
-    fill: darkorange;
-}
-.IndDemocrat {
-    fill: darkslateblue;
-}
-.Adams-ClayRepublican {
-    fill: lightyellow;
-}
-.JacksonRepublican {
-    fill: lightblue;
-}
-.CrawfordRepublican {
-    fill: darkblue;
-}
-.Adams-ClayFederalist {
-    fill: forestgreen;
-}
-.JacksonFederalist {
-    fill: lightgreen;
-}
-.CrawfordFederalist {
-    fill: darkgreen;
-}
-.Adams {
-    fill: lightyellow;
-}
-.Jackson {
-    fill: lightgreen;
-}
-.Whig {
-    fill: beige;
+#app {
+    height: 100vh;
 }
 .houseSenateGrid {
     grid-template-columns: 2;

@@ -1,3 +1,4 @@
+# TODO: don't use ORM for bulk insertions (too slow), use raw sqlite statements (10x faster)
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from models import *

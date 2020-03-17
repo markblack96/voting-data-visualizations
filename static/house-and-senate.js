@@ -4,19 +4,8 @@
 var dataGlobal;
 let selectedCongressperson = '';
 
-const bioTemplate = (person)=>{
-    return `
-        <h5>${person.bioname}</h5>
-        <ul>
-            <li>${person.chamber}</li>
-            <li>${person.party}</li>
-            <li>${person.state}${person.chamber === 'House' ? ", district " + person.district : ''}</li>
-        </ul>
-        <button class="button" id="showVotes">Show Votes</button>
-        <div id="biography-votes"></div>
-    `
-}
 function congress(n) {
+    document.querySelector('#congress-vis').hidden = false;
     d3.json('/congress/' + n).then(function(data) {
         dataGlobal = data;
         let parties = listParties(data);
@@ -235,15 +224,13 @@ function congress(n) {
                     d3.select(this).attr('stroke-width', 1) 
                     d3.select('.tooltip').style('opacity', 0);
                 }).on('click', function(d) {
+                    selectedCongressperson = d;
                     // set biography data
                     d3.select('#biography')
-                        .html(`
-                            <h5>${d.bioname}</h5>
-                            <ul>
-                                <li>${d.party}</li>
-                                <li>${d.state}${d.chamber === 'House' ? ", district " + d.district : ''}</li>
-                            </ul>
-                        `)
+                        .html(bioTemplate(d));
+                    document.querySelector('#showVotes').onclick = () => {
+                        getVotes(selectedCongressperson.icpsr, n);
+                    };
                 });
         
         senateMembers.enter().append('circle')
@@ -267,15 +254,13 @@ function congress(n) {
                 d3.select(this).attr('stroke-width', 1) 
                 d3.select('.tooltip').style('opacity', 0);
             }).on('click', function(d) {
+                selectedCongressperson = d;
                 // set biography data
                 d3.select('#biography')
-                    .html(`
-                        <h5>${d.bioname}</h5>
-                        <ul>
-                            <li>${d.party}</li>
-                            <li>${d.state}</li>
-                        </ul>
-                    `)
+                    .html(bioTemplate(d));
+                document.querySelector('#showVotes').onclick = () => {
+                    getVotes(selectedCongressperson.icpsr, n);
+                };
             });
         senateMembers.exit().remove();
 

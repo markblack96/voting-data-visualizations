@@ -1,4 +1,4 @@
-# Routes for API will go here
+# TODO: separate routes for pages from routes for API
 from flask import Flask, render_template, url_for, jsonify
 from db_scripts.models import *
 from helpers import *

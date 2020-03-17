@@ -4,6 +4,7 @@
     <title>VoteView Visualizations</title>
     <link rel="stylesheet" href="https://unpkg.com/teutonic-css@0.7.13/teutonic.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='visualizations.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='parties.css') }}">
     <script src="https://d3js.org/d3.v5.min.js"></script>
     <script src="{{ url_for('static', filename='utilities.js') }}"></script>
     <!-- script src="{{ url_for('static', filename='congress-vis.js') }}"></script-->
@@ -11,7 +12,7 @@
 </head>
 <body>
     <div id="app" class="flex gap-no">
-      <div class="span-twothird box">
+      <div id="congress" class="span-twothird box">
         <div id="controls">
           Congress: 
           <select class="select read_s" id="congress_num_select" onchange="showCongress()">
@@ -19,7 +20,7 @@
           </select>
         </div>
         
-        <div class="wrap-no gap-no inline">
+        <div class="wrap-no gap-no inline" id="congress-vis" hidden="true">
           <div id="house_holder"><h5>House</h5></div>
           <div id="senate_holder"><h5>Senate</h5></div>
         </div>

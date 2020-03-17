@@ -1,4 +1,16 @@
 // my function junk drawer
+const bioTemplate = (person)=>{
+  return `
+      <h5>${person.bioname}</h5>
+      <ul>
+          <li>${person.chamber}</li>
+          <li>${person.party}</li>
+          <li>${person.state}${person.chamber === 'House' ? ", district " + person.district : ''}</li>
+      </ul>
+      <button class="button" id="showVotes">Show Votes</button>
+      <div id="biography-votes"></div>
+  `
+}
 function voteTemplate(data) {
   return `
     <br>
