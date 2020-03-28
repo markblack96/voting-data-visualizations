@@ -33,6 +33,15 @@ function listParties(data) {
   }
   return parties;
 }
+function listStates(data) {
+  let states = [];
+  for (d in data) {
+    if (states.find(function(datum) { return datum === data[d].state; }) === undefined) {
+      states.push(data[d].state);
+    }
+  }
+  return states;
+}
 function getVotes(icpsr, congressNum) {
   // uses icpsr and congressNum to retrieve voting data for individual congresspersons
   d3.json('/votes/'+icpsr+'/'+congressNum).then((data)=>{
