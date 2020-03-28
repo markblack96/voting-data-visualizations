@@ -24,3 +24,11 @@ function congressByState(n) {
         
     })
 }
+
+function showCongress() {
+    // get the selected option
+    let selectedIndex = document.getElementById('congress_num_select').options.selectedIndex;
+    let selectedCongress = document.getElementById('congress_num_select').options[selectedIndex].value; // hilariously verbose
+    congressByState(selectedCongress);
+  }
+  

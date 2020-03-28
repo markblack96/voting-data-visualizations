@@ -1,0 +1,63 @@
+<!doctype html>
+<html>
+<head>
+    <title>VoteView Visualizations</title>
+    <link rel="stylesheet" href="https://unpkg.com/teutonic-css@0.7.13/teutonic.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='visualizations.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='parties.css') }}">
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <script src="{{ url_for('static', filename='utilities.js') }}"></script>
+    <script src="{{ url_for('static', filename='house-and-senate-by-state.js') }}"></script>
+</head>
+<body>
+    <div id="app" class="flex gap-no">
+      <div id="congress" class="span-twothird box">
+        <div id="controls">
+          Congress: 
+          <select class="select read_s" id="congress_num_select" onchange="showCongress()">
+            <option value="" disabled selected>Select</option>
+          </select>
+        </div>
+        
+        <div class="wrap-no gap-no inline" id="congress-vis" hidden="true">
+          <div id="house_holder"><h5>House</h5></div>
+          <div id="senate_holder"><h5>Senate</h5></div>
+        </div>
+      </div>
+      <div id="biography" class="span-third box"></div>
+    </div>
+    <script>
+    // Get the data 
+    var margins = {
+    	width: 640,
+      height: 420
+    }
+    
+    const houseSvg = d3.select('#house_holder')
+	    .append('svg')
+        .attr('width', margins.width)
+        .attr('height', margins.height)
+        .attr('class', 'house');
+    
+    const senateSvg = d3.select('#senate_holder')
+	    .append('svg')
+        .attr('width', margins.width)
+        .attr('height', margins.height)
+        .attr('class', 'senate');
+
+    // auto-invoker
+    (function() {
+      // populate select tag
+      let range = d3.range(1, 117);
+      let select = document.getElementById('congress_num_select');
+      for (i in range) {
+        select.appendChild(new Option(range[i], range[i], false, false));
+      }
+      const tooltip = d3.select("body")
+      .append("div")	
+        .attr("class", "tooltip")				
+        .style("opacity", 0);
+    })();
+    </script>
+</body>
+</html>

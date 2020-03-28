@@ -65,3 +65,7 @@ def get_votes(icpsr, congress_num):
 @app.route('/')
 def index():
     return render_template('index.html')
+
+@app.route('/test')
+def tester():
+    return render_template('test.html')
